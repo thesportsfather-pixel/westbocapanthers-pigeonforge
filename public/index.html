@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    West Boca Travel Panthers | Road to Pigeon Forge
+  </title>
+
+  <meta
+    name="description"
+    content="Support the West Boca Travel Panthers on their Road to Pigeon Forge and the Ripken Experience in Tennessee."
+  />
+
+  <meta
+    name="theme-color"
+    content="#050505"
+  />
+
+  <style>
+    :root {
+      --black: #050505;
+      --black-soft: #0b0b0c;
+      --graphite: #242426;
+      --gray: #4a4a4a;
+      --silver: #bfc2c7;
+      --silver-light: #eef0f3;
+      --white: #ffffff;
+      --muted: #a9adb4;
+      --line: rgba(255,255,255,.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: var(--white);
+
+      background:
+        radial-gradient(
+          circle at 12% 5%,
+          rgba(255,255,255,.08),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 88% 8%,
+          rgba(120,120,120,.12),
+          transparent 28%
+        ),
+        linear-gradient(
+          180deg,
+          #040404 0%,
+          #111113 38%,
+          #050505 100%
+        );
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -10;
+      pointer-events: none;
+
+      background:
+        repeating-radial-gradient(
+          ellipse at center,
+          transparent 0,
+          transparent 26px,
+          rgba(255,255,255,.012) 27px,
+          rgba(255,255,255,.012) 28px
+        );
+
+      opacity: .65;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .shell {
+      width: min(
+        1180px,
+        calc(100% - 28px)
+      );
+
+      margin: 0 auto;
+    }
+
+    .top-strip {
+      height: 5px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2b2b2d,
+          #ffffff,
+          #4a4a4a,
+          #ffffff,
+          #2b2b2d
+        );
+
+      box-shadow:
+        0 0 18px rgba(255,255,255,.24);
+    }
+
+
+    /* =====================================
+       HEADER
+    ===================================== */
+
+    .header {
+      padding: 20px 0 8px;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .team-logo {
+      width: min(560px, 88%);
+
+      max-height: 190px;
+
+      object-fit: contain;
+
+      filter:
+        drop-shadow(
+          0 15px 28px rgba(0,0,0,.65)
+        );
+    }
+
+
+    /* =====================================
+       HERO
+    ===================================== */
+
+    .hero {
+      padding: 14px 0 40px;
+    }
+
+    .hero-panel {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+
+      min-height: 590px;
+
+      border-radius: 34px;
+
+      border:
+        1px solid rgba(255,255,255,.12);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.015)
+        );
+
+      box-shadow:
+        0 35px 100px rgba(0,0,0,.65);
+    }
+
+    .hero-panel::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      z-index: -6;
+
+      background:
+        radial-gradient(
+          circle at 14% 18%,
+          rgba(255,255,255,.09),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 83% 18%,
+          rgba(130,130,135,.12),
+          transparent 30%
+        ),
+        linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(5,5,5,.10) 45%,
+          rgba(5,5,5,.94) 100%
+        );
+    }
+
+
+    /* =====================================
+       MOUNTAINS
+    ===================================== */
+
+    .mountains-back {
+      position: absolute;
+
+      z-index: -5;
+
+      left: -10%;
+      right: -10%;
+      bottom: 0;
+
+      height: 58%;
+
+      opacity: .65;
+
+      background:
+        linear-gradient(
+          145deg,
+          transparent 0 18%,
+          rgba(60,61,65,.70) 18.4% 34%,
+          transparent 34.5%
+        ),
+        linear-gradient(
+          220deg,
+          transparent 0 23%,
+          rgba(47,48,52,.74) 23.5% 40%,
+          transparent 40.5%
+        ),
+        linear-gradient(
+          150deg,
+          transparent 0 37%,
+          rgba(36,37,40,.78) 37.5% 55%,
+          transparent 55.5%
+        );
+    }
+
+    .mountains-mid {
+      position: absolute;
+
+      z-index: -4;
+
+      left: -15%;
+      right: -15%;
+      bottom: -3%;
+
+      height: 48%;
+
+      opacity: .90;
+
+      background:
+        linear-gradient(
+          145deg,
+          transparent 0 18%,
+          rgba(31,32,35,.98) 18.5% 37%,
+          transparent 37.5%
+        ),
+        linear-gradient(
+          216deg,
+          transparent 0 26%,
+          rgba(25,26,29,.98) 26.5% 48%,
+          transparent 48.5%
+        ),
+        linear-gradient(
+          145deg,
+          transparent 0 48%,
+          rgba(14,15,17,.98) 48.5% 66%,
+          transparent 66.5%
+        );
+    }
+
+    .mountain-glow-left {
+      position: absolute;
+
+      z-index: -3;
+
+      left: -50px;
+      bottom: 70px;
+
+      width: 430px;
+      height: 170px;
+
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(255,255,255,.11),
+          transparent 70%
+        );
+
+      filter: blur(20px);
+    }
+
+    .mountain-glow-right {
+      position: absolute;
+
+      z-index: -3;
+
+      right: -50px;
+      bottom: 50px;
+
+      width: 430px;
+      height: 170px;
+
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(120,120,125,.16),
+          transparent 70%
+        );
+
+      filter: blur(20px);
+    }
+
+
+    /* =====================================
+       HERO CONTENT
+    ===================================== */
+
+    .hero-grid {
+      position: relative;
+
+      z-index: 2;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.12fr)
+        minmax(270px, .68fr);
+
+      gap: 30px;
+
+      align-items: center;
+
+      padding:
+        55px
+        55px
+        125px;
+    }
+
+    .kicker {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 15px;
+
+      color: var(--silver-light);
+
+      font-size: 11px;
+
+      font-weight: 950;
+
+      letter-spacing: 3px;
+
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+
+      width: 31px;
+      height: 3px;
+
+      background: var(--silver);
+
+      box-shadow:
+        0 0 15px rgba(255,255,255,.35);
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size:
+        clamp(
+          54px,
+          8.5vw,
+          108px
+        );
+
+      line-height: .84;
+
+      letter-spacing: -5px;
+
+      text-transform: uppercase;
+
+      font-weight: 950;
+    }
+
+    .road {
+      display: block;
+
+      color: white;
+    }
+
+    .pigeon {
+      display: block;
+
+      margin-top: 10px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ffffff,
+          #d9dadd 38%,
+          #8b8d92 73%,
+          #ffffff
+        );
+
+      -webkit-background-clip:
+        text;
+
+      background-clip:
+        text;
+
+      color: transparent;
+    }
+
+    .hero-copy {
+      max-width: 670px;
+
+      margin: 24px 0 0;
+
+      color: #c7cad1;
+
+      font-size: 17px;
+
+      line-height: 1.67;
+    }
+
+    .hero-copy strong {
+      color: white;
+    }
+
+    .hero-buttons {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 11px;
+
+      margin-top: 27px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+
+      justify-content: center;
+      align-items: center;
+
+      min-height: 50px;
+
+      padding: 0 21px;
+
+      border-radius: 12px;
+
+      text-decoration: none;
+
+      font-size: 12px;
+
+      font-weight: 950;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+    }
+
+    .primary-btn {
+      border: 0;
+
+      color: #050505;
+
+      background:
+        linear-gradient(
+          115deg,
+          #ffffff,
+          #bfc2c7
+        );
+
+      box-shadow:
+        0 12px 28px
+        rgba(255,255,255,.12);
+    }
+
+    .secondary-btn {
+      border:
+        1px solid
+        rgba(255,255,255,.20);
+
+      color: white;
+
+      background:
+        rgba(0,0,0,.25);
+    }
+
+
+    /* =====================================
+       RIPKEN LOGO
+    ===================================== */
+
+    .hero-badge-area {
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      position: relative;
+
+      min-height: 370px;
+    }
+
+    .hero-badge-area::before {
+      content: "";
+
+      position: absolute;
+
+      width: 340px;
+      height: 340px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.13),
+          rgba(90,90,95,.10) 43%,
+          transparent 69%
+        );
+
+      filter: blur(6px);
+    }
+
+    .ripken-logo {
+      position: relative;
+
+      z-index: 2;
+
+      width: min(
+        335px,
+        90%
+      );
+
+      filter:
+        drop-shadow(
+          0 22px 30px
+          rgba(0,0,0,.62)
+        );
+    }
+
+
+    /* =====================================
+       HERO STATS
+    ===================================== */
+
+    .stats {
+      position: absolute;
+
+      z-index: 4;
+
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      border-top:
+        1px solid
+        rgba(255,255,255,.09);
+
+      background:
+        rgba(3,3,4,.76);
+
+      backdrop-filter:
+        blur(8px);
+    }
+
+    .stat {
+      position: relative;
+
+      padding:
+        20px 15px;
+
+      text-align: center;
+    }
+
+    .stat:not(:last-child)::after {
+      content: "";
+
+      position: absolute;
+
+      top: 25%;
+      right: 0;
+      bottom: 25%;
+
+      width: 1px;
+
+      background:
+        rgba(255,255,255,.08);
+    }
+
+    .stat strong {
+      display: block;
+
+      margin-bottom: 3px;
+
+      font-size: 23px;
+
+      font-weight: 950;
+    }
+
+    .stat span {
+      color: #95989e;
+
+      font-size: 9px;
+
+      font-weight: 900;
+
+      letter-spacing: 1.5px;
+
+      text-transform: uppercase;
+    }
+
+
+    /* =====================================
+       PLAYERS
+    ===================================== */
+
+    .players-section {
+      padding: 48px 0;
+    }
+
+    .section-head {
+      text-align: center;
+
+      margin-bottom: 28px;
+    }
+
+    .section-label {
+      margin-bottom: 9px;
+
+      color: var(--silver);
+
+      font-size: 10px;
+
+      font-weight: 950;
+
+      letter-spacing: 3px;
+
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+
+      font-size:
+        clamp(
+          34px,
+          5vw,
+          58px
+        );
+
+      line-height: .95;
+
+      text-transform: uppercase;
+    }
+
+    .section-head p {
+      max-width: 700px;
+
+      margin:
+        13px auto 0;
+
+      color: #aeb2bb;
+
+      line-height: 1.6;
+    }
+
+    .players-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 14px;
+    }
+
+    .player-card {
+      position: relative;
+
+      overflow: hidden;
+
+      display: block;
+
+      min-height: 150px;
+
+      padding: 20px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+
+      text-decoration: none;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.015)
+        );
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .player-card::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+      right: 0;
+
+      height: 4px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ffffff,
+          #777a80,
+          #ffffff
+        );
+    }
+
+    .player-card::after {
+      content: "";
+
+      position: absolute;
+
+      right: -55px;
+      bottom: -65px;
+
+      width: 145px;
+      height: 145px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.09),
+          transparent 68%
+        );
+    }
+
+    .player-card:hover {
+      transform:
+        translateY(-5px);
+
+      border-color:
+        rgba(255,255,255,.42);
+
+      box-shadow:
+        0 18px 40px
+        rgba(0,0,0,.35);
+    }
+
+    .player-number {
+      color: #c9cbd0;
+
+      font-size: 13px;
+
+      font-weight: 950;
+
+      letter-spacing: 2px;
+    }
+
+    .player-name {
+      position: relative;
+
+      z-index: 2;
+
+      margin-top: 8px;
+
+      font-size: 20px;
+
+      font-weight: 950;
+
+      line-height: 1.12;
+    }
+
+    .player-action {
+      position: absolute;
+
+      z-index: 3;
+
+      left: 20px;
+      bottom: 17px;
+
+      color: #d9dbe0;
+
+      font-size: 9px;
+
+      font-weight: 950;
+
+      letter-spacing: 1.3px;
+
+      text-transform: uppercase;
+    }
+
+    .player-action span {
+      color: white;
+    }
+
+
+    /* =====================================
+       SUPPORT PANEL
+    ===================================== */
+
+    .support-section {
+      padding:
+        8px 0 54px;
+    }
+
+    .support-panel {
+      position: relative;
+
+      overflow: hidden;
+
+      display: grid;
+
+      grid-template-columns:
+        .95fr 1.05fr;
+
+      gap: 34px;
+
+      align-items: center;
+
+      padding: 38px;
+
+      border-radius: 26px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.11);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,.07),
+          rgba(75,75,78,.11)
+        );
+
+      box-shadow:
+        0 24px 65px
+        rgba(0,0,0,.36);
+    }
+
+    .support-panel::before {
+      content: "";
+
+      position: absolute;
+
+      left: -80px;
+      bottom: -120px;
+
+      width: 430px;
+      height: 240px;
+
+      opacity: .40;
+
+      background:
+        linear-gradient(
+          145deg,
+          transparent 0 28%,
+          rgba(255,255,255,.11) 28.5% 52%,
+          transparent 52.5%
+        );
+    }
+
+    .support-copy,
+    .support-action {
+      position: relative;
+
+      z-index: 2;
+    }
+
+    .support-copy h2 {
+      margin:
+        6px 0 0;
+
+      font-size:
+        clamp(
+          32px,
+          4.5vw,
+          54px
+        );
+
+      line-height: .96;
+
+      text-transform: uppercase;
+    }
+
+    .support-copy p {
+      margin:
+        14px 0 0;
+
+      color: #c1c5cc;
+
+      line-height: 1.6;
+    }
+
+    .support-action {
+      padding: 25px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+
+      background:
+        rgba(3,4,6,.55);
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+    .support-action h3 {
+      margin:
+        0 0 10px;
+
+      font-size: 22px;
+    }
+
+    .support-action p {
+      margin:
+        0 0 19px;
+
+      color: #aeb2bb;
+
+      line-height: 1.55;
+
+      font-size: 13px;
+    }
+
+    .support-btn {
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      width: 100%;
+
+      min-height: 51px;
+
+      border: 0;
+
+      border-radius: 11px;
+
+      color: #050505;
+
+      text-decoration: none;
+
+      background:
+        linear-gradient(
+          115deg,
+          #ffffff,
+          #b8bbc0
+        );
+
+      font-size: 12px;
+
+      font-weight: 950;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+    }
+
+
+    /* =====================================
+       HOW IT WORKS
+    ===================================== */
+
+    .how-section {
+      padding:
+        8px 0 54px;
+    }
+
+    .how-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 14px;
+    }
+
+    .how-card {
+      min-height: 195px;
+
+      padding: 25px;
+
+      border-radius: 20px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.10);
+
+      background:
+        rgba(255,255,255,.025);
+    }
+
+    .how-number {
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      width: 42px;
+      height: 42px;
+
+      margin-bottom: 17px;
+
+      border-radius: 50%;
+
+      color: #050505;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #999ca2
+        );
+
+      font-weight: 950;
+    }
+
+    .how-card h3 {
+      margin:
+        0 0 8px;
+
+      font-size: 19px;
+    }
+
+    .how-card p {
+      margin: 0;
+
+      color: #aeb2bb;
+
+      font-size: 13px;
+
+      line-height: 1.6;
+    }
+
+
+    /* =====================================
+       FOOTER
+    ===================================== */
+
+    footer {
+      padding:
+        0 0 35px;
+
+      text-align: center;
+
+      color: #717680;
+
+      font-size: 10px;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+    }
+
+    .footer-line {
+      height: 1px;
+
+      margin-bottom: 22px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.25),
+          rgba(120,120,125,.35),
+          rgba(255,255,255,.25),
+          transparent
+        );
+    }
+
+
+    /* =====================================
+       TABLET
+       KEEP RIPKEN LOGO BESIDE TEXT
+    ===================================== */
+
+    @media (
+      max-width: 980px
+    ) {
+
+      .hero-grid {
+        grid-template-columns:
+          minmax(0, 1fr)
+          230px;
+
+        gap: 18px;
+
+        padding:
+          43px
+          30px
+          122px;
+      }
+
+      .hero-badge-area {
+        min-height: 260px;
+      }
+
+      .ripken-logo {
+        width: 220px;
+      }
+
+      .players-grid {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+      .support-panel {
+        grid-template-columns:
+          1fr;
+      }
+    }
+
+
+    /* =====================================
+       MOBILE
+       RIPKEN LOGO STAYS BESIDE HERO
+    ===================================== */
+
+    @media (
+      max-width: 700px
+    ) {
+
+      .shell {
+        width:
+          min(
+            calc(100% - 18px),
+            1180px
+          );
+      }
+
+      .header {
+        padding-top: 16px;
+      }
+
+      .team-logo {
+        width: min(
+          430px,
+          92%
+        );
+      }
+
+      .hero {
+        padding-top: 6px;
+      }
+
+      .hero-panel {
+        min-height: auto;
+
+        border-radius: 23px;
+      }
+
+      .hero-grid {
+        grid-template-columns:
+          minmax(0, 1fr)
+          125px;
+
+        gap: 7px;
+
+        align-items: center;
+
+        padding:
+          29px
+          15px
+          175px;
+      }
+
+      h1 {
+        font-size:
+          clamp(
+            41px,
+            11.5vw,
+            65px
+          );
+
+        letter-spacing: -3px;
+      }
+
+      .kicker {
+        font-size: 8px;
+
+        letter-spacing: 1.5px;
+      }
+
+      .kicker::before {
+        width: 20px;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+
+        line-height: 1.5;
+      }
+
+      .hero-buttons {
+        display: grid;
+
+        grid-template-columns:
+          1fr;
+
+        gap: 8px;
+
+        max-width: 210px;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        min-height: 43px;
+
+        padding:
+          0 8px;
+
+        font-size: 9px;
+      }
+
+      .hero-badge-area {
+        min-height: 170px;
+      }
+
+      .hero-badge-area::before {
+        width: 155px;
+        height: 155px;
+      }
+
+      .ripken-logo {
+        width: 125px;
+
+        max-width: 125px;
+      }
+
+      .mountains-back {
+        height: 42%;
+      }
+
+      .mountains-mid {
+        height: 37%;
+      }
+
+      .stats {
+        grid-template-columns:
+          repeat(4, 1fr);
+      }
+
+      .stat {
+        padding:
+          15px 4px;
+      }
+
+      .stat strong {
+        font-size: 18px;
+      }
+
+      .stat span {
+        font-size: 7px;
+
+        letter-spacing: .7px;
+      }
+
+
+      /* ALWAYS TWO PLAYER COLUMNS */
+
+      .players-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+
+        gap: 9px;
+      }
+
+      .player-card {
+        min-height: 115px;
+
+        padding:
+          15px 13px;
+      }
+
+      .player-number {
+        font-size: 11px;
+      }
+
+      .player-name {
+        margin-top: 5px;
+
+        font-size: 15px;
+      }
+
+      .player-action {
+        left: 13px;
+        bottom: 12px;
+
+        font-size: 7px;
+
+        letter-spacing: .7px;
+      }
+
+      .support-panel {
+        padding:
+          27px 18px;
+
+        gap: 22px;
+      }
+
+      .support-action {
+        padding: 17px;
+      }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    @media (
+      max-width: 390px
+    ) {
+
+      .hero-grid {
+        grid-template-columns:
+          minmax(0, 1fr)
+          100px;
+
+        gap: 3px;
+
+        padding-left: 13px;
+
+        padding-right: 10px;
+      }
+
+      h1 {
+        font-size:
+          clamp(
+            38px,
+            11vw,
+            52px
+          );
+      }
+
+      .hero-badge-area {
+        min-height: 145px;
+      }
+
+      .ripken-logo {
+        width: 96px;
+
+        max-width: 96px;
+      }
+
+      .players-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+
+        gap: 7px;
+      }
+
+      .player-card {
+        min-height: 108px;
+
+        padding:
+          13px 10px;
+      }
+
+      .player-name {
+        font-size: 14px;
+      }
+
+      .player-action {
+        left: 10px;
+
+        font-size: 6.5px;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <div class="top-strip"></div>
+
+
+  <!-- =================================
+       HEADER
+  ================================== -->
+
+  <header class="header">
+
+    <div class="shell">
+
+      <div class="header-inner">
+
+        <img
+          class="team-logo"
+          src="/west-boca-panthers-logo.png"
+          alt="West Boca Travel Panthers"
+        />
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- =================================
+         HERO
+    ================================== -->
+
+    <section class="hero">
+
+      <div class="shell">
+
+        <div class="hero-panel">
+
+          <div class="mountains-back"></div>
+
+          <div class="mountains-mid"></div>
+
+          <div class="mountain-glow-left"></div>
+
+          <div class="mountain-glow-right"></div>
+
+
+          <div class="hero-grid">
+
+            <div>
+
+              <div class="kicker">
+                West Boca Travel Panthers
+              </div>
+
+
+              <h1>
+
+                <span class="road">
+                  Road To
+                </span>
+
+                <span class="pigeon">
+                  Pigeon Forge
+                </span>
+
+              </h1>
+
+
+              <p class="hero-copy">
+
+                Help the
+                <strong>
+                  West Boca Travel Panthers
+                </strong>
+                make the journey to
+                <strong>
+                  Pigeon Forge, Tennessee
+                </strong>
+                for an unforgettable baseball
+                experience at the
+                <strong>
+                  Ripken Experience.
+                </strong>
+
+              </p>
+
+
+              <div class="hero-buttons">
+
+                <a
+                  class="primary-btn"
+                  href="#players"
+                >
+                  Choose A Player
+                </a>
+
+                <a
+                  class="secondary-btn"
+                  href="#support"
+                >
+                  General Donation
+                </a>
+
+              </div>
+
+            </div>
+
+
+            <div class="hero-badge-area">
+
+              <img
+                class="ripken-logo"
+                src="/ripken-pigeon-forge.webp"
+                alt="Ripken Experience Pigeon Forge"
+              />
+
+            </div>
+
+          </div>
+
+
+          <div class="stats">
+
+            <div class="stat">
+              <strong>11</strong>
+              <span>Panthers Players</span>
+            </div>
+
+            <div class="stat">
+              <strong>60</strong>
+              <span>Balls Each</span>
+            </div>
+
+            <div class="stat">
+              <strong>$1–$60</strong>
+              <span>Ball Values</span>
+            </div>
+
+            <div class="stat">
+              <strong>TN</strong>
+              <span>Pigeon Forge</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =================================
+         PLAYERS
+    ================================== -->
+
+    <section
+      class="players-section"
+      id="players"
+    >
+
+      <div class="shell">
+
+        <div class="section-head">
+
+          <div class="section-label">
+            Choose Your Player
+          </div>
+
+          <h2>
+            Support The Journey
+          </h2>
+
+          <p>
+            Select a West Boca Travel Panthers
+            player to view their available
+            baseballs and support their
+            Road to Pigeon Forge.
+          </p>
+
+        </div>
+
+
+        <div class="players-grid">
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=landon-kopp"
+          >
+            <div class="player-number">
+              #1
+            </div>
+
+            <div class="player-name">
+              Landon Kopp
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=mikey-dolman"
+          >
+            <div class="player-number">
+              #2
+            </div>
+
+            <div class="player-name">
+              Mikey Dolman
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=beckett-wheelock"
+          >
+            <div class="player-number">
+              #6
+            </div>
+
+            <div class="player-name">
+              Beckett Wheelock
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=aidan-ghee"
+          >
+            <div class="player-number">
+              #7
+            </div>
+
+            <div class="player-name">
+              Aidan Ghee
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=aston-lepior"
+          >
+            <div class="player-number">
+              #8
+            </div>
+
+            <div class="player-name">
+              Aston Lepior
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=cameron-sylvin"
+          >
+            <div class="player-number">
+              #15
+            </div>
+
+            <div class="player-name">
+              Cameron Sylvin
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=jack-losby"
+          >
+            <div class="player-number">
+              #22
+            </div>
+
+            <div class="player-name">
+              Jack Losby
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=cullen-swisher"
+          >
+            <div class="player-number">
+              #27
+            </div>
+
+            <div class="player-name">
+              Cullen Swisher
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=dylan-shafran"
+          >
+            <div class="player-number">
+              #30
+            </div>
+
+            <div class="player-name">
+              Dylan Shafran
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=sebastian-silva"
+          >
+            <div class="player-number">
+              #41
+            </div>
+
+            <div class="player-name">
+              Sebastian Silva
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+          <a
+            class="player-card"
+            href="/fundraiser.html?player=caleb-gene"
+          >
+            <div class="player-number">
+              #77
+            </div>
+
+            <div class="player-name">
+              Caleb Gene
+            </div>
+
+            <div class="player-action">
+              Support Player
+              <span>→</span>
+            </div>
+          </a>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =================================
+         GENERAL DONATION SUPPORT
+    ================================== -->
+
+    <section
+      class="support-section"
+      id="support"
+    >
+
+      <div class="shell">
+
+        <div class="support-panel">
+
+
+          <div class="support-copy">
+
+            <div class="section-label">
+              Support The Panthers
+            </div>
+
+            <h2>
+              General Donation
+            </h2>
+
+            <p>
+              Want to make a donation without
+              choosing a numbered baseball?
+              Select the player you would like
+              to support and use the General
+              Donation option on their fundraiser
+              page.
+            </p>
+
+          </div>
+
+
+          <div class="support-action">
+
+            <h3>
+              Choose A Panthers Player
+            </h3>
+
+            <p>
+              Every donation goes toward that
+              player's Road to Pigeon Forge
+              fundraising progress.
+            </p>
+
+            <a
+              class="support-btn"
+              href="#players"
+            >
+              Select A Player
+            </a>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =================================
+         HOW IT WORKS
+    ================================== -->
+
+    <section
+      class="how-section"
+      id="how-it-works"
+    >
+
+      <div class="shell">
+
+        <div class="section-head">
+
+          <div class="section-label">
+            Baseball Fundraiser
+          </div>
+
+          <h2>
+            How It Works
+          </h2>
+
+        </div>
+
+
+        <div class="how-grid">
+
+
+          <div class="how-card">
+
+            <div class="how-number">
+              1
+            </div>
+
+            <h3>
+              Choose A Player
+            </h3>
+
+            <p>
+              Select the West Boca Travel
+              Panthers player you would like
+              to support.
+            </p>
+
+          </div>
+
+
+          <div class="how-card">
+
+            <div class="how-number">
+              2
+            </div>
+
+            <h3>
+              Pick Baseballs
+            </h3>
+
+            <p>
+              Every player has baseballs
+              numbered 1 through 60.
+              The number equals the donation
+              amount.
+            </p>
+
+          </div>
+
+
+          <div class="how-card">
+
+            <div class="how-number">
+              3
+            </div>
+
+            <h3>
+              Support The Journey
+            </h3>
+
+            <p>
+              Complete your secure checkout
+              and help send the West Boca
+              Travel Panthers to Pigeon Forge.
+            </p>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =================================
+       FOOTER
+  ================================== -->
+
+  <footer>
+
+    <div class="shell">
+
+      <div class="footer-line"></div>
+
+      West Boca Travel Panthers
+      &nbsp;•&nbsp;
+      Road To Pigeon Forge
+      &nbsp;•&nbsp;
+      2026
+
+    </div>
+
+  </footer>
+
+
+</body>
+</html>
