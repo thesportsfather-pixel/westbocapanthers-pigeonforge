@@ -1,29 +1,53 @@
+const TEAM_KEY = "west-boca-panthers";
+const GOAL_DOLLARS = 1830;
+
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "content-type":
-        "application/json; charset=utf-8",
-      "cache-control":
-        "no-store",
-    },
-  });
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: {
+        "content-type":
+          "application/json; charset=utf-8",
+
+        "cache-control":
+          "no-store"
+      }
+    }
+  );
 }
 
 
-const TEAM_KEY =
-  "west-boca-panthers";
+function requireSupabase(env) {
+
+  if (
+    !env.SUPABASE_URL ||
+    !env.SUPABASE_SERVICE_ROLE_KEY
+  ) {
+
+    throw new Error(
+      "Missing server configuration: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
+    );
+
+  }
+
+}
 
 
 async function supabaseGet(
   env,
   path
 ) {
+
+  requireSupabase(env);
+
+
   const response =
     await fetch(
       `${env.SUPABASE_URL}/rest/v1/${path}`,
       {
-        method: "GET",
+        method:
+          "GET",
 
         headers: {
           apikey:
@@ -33,8 +57,8 @@ async function supabaseGet(
             `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
 
           accept:
-            "application/json",
-        },
+            "application/json"
+        }
       }
     );
 
@@ -44,91 +68,87 @@ async function supabaseGet(
 
 
   if (!response.ok) {
+
     throw new Error(
       `Supabase ${response.status}: ${text}`
     );
+
   }
 
 
   return text
     ? JSON.parse(text)
     : [];
+
 }
 
 
 export async function onRequestGet({
   request,
-  env,
+  env
 }) {
+
   try {
 
-    if (
-      !env.SUPABASE_URL ||
-      !env.SUPABASE_SERVICE_ROLE_KEY
-    ) {
-      return json(
-        {
-          success: false,
-          error:
-            "Missing server configuration.",
-        },
-        500
-      );
-    }
-
-
     const url =
-      new URL(request.url);
+      new URL(
+        request.url
+      );
 
 
     const playerKey =
-      (
-        url.searchParams.get("player") ||
-        ""
+      String(
+        url.searchParams.get(
+          "player"
+        ) || ""
       ).trim();
 
 
     if (!playerKey) {
+
       return json(
         {
           success: false,
           error:
-            "A player is required.",
+            "A player is required."
         },
         400
       );
+
     }
 
 
-    // =====================================
-    // FIND TEAM
-    // =====================================
+    /*
+     * Find West Boca Panthers team.
+     */
 
     const teams =
       await supabaseGet(
         env,
 
         `teams` +
-          `?team_key=eq.${encodeURIComponent(
-            TEAM_KEY
-          )}` +
-          `&select=id,team_key,team_name` +
-          `&limit=1`
+        `?team_key=eq.${encodeURIComponent(
+          TEAM_KEY
+        )}` +
+        `&select=id,team_key,team_name` +
+        `&limit=1`
       );
 
 
     if (
       !Array.isArray(teams) ||
-      teams.length === 0
+      !teams.length
     ) {
+
       return json(
         {
           success: false,
           error:
-            "Team not found.",
+            "West Boca Panthers team was not found."
         },
         404
       );
+
     }
 
 
@@ -136,38 +156,40 @@ export async function onRequestGet({
       teams[0];
 
 
-    // =====================================
-    // FIND PLAYER
-    // =====================================
+    /*
+     * Find player using team_id.
+     */
 
     const players =
       await supabaseGet(
         env,
 
         `players` +
-          `?team_id=eq.${encodeURIComponent(
-            team.id
-          )}` +
-          `&player_key=eq.${encodeURIComponent(
-            playerKey
-          )}` +
-          `&select=id,player_key,player_name,player_number` +
-          `&limit=1`
+        `?team_id=eq.${encodeURIComponent(
+          team.id
+        )}` +
+        `&player_key=eq.${encodeURIComponent(
+          playerKey
+        )}` +
+        `&select=id,team_id,player_key,player_name,player_number` +
+        `&limit=1`
       );
 
 
     if (
       !Array.isArray(players) ||
-      players.length === 0
+      !players.length
     ) {
+
       return json(
         {
           success: false,
           error:
-            "Player not found.",
+            "Player not found."
         },
         404
       );
+
     }
 
 
@@ -175,179 +197,105 @@ export async function onRequestGet({
       players[0];
 
 
-    // =====================================
-    // GET BASEBALLS
-    // =====================================
+    /*
+     * Load the player's 60 baseballs.
+     */
 
     const baseballs =
       await supabaseGet(
         env,
 
         `baseballs` +
-          `?team_id=eq.${encodeURIComponent(
-            TEAM_KEY
-          )}` +
-          `&player_id=eq.${encodeURIComponent(
-            player.id
-          )}` +
-          `&select=id,ball_number,amount_cents,status,donor_name,sold_at,stripe_session_id` +
-          `&order=ball_number.asc`
+        `?player_id=eq.${encodeURIComponent(
+          player.id
+        )}` +
+        `&select=id,ball_number,amount_cents,status,donor_name,sold_at,stripe_session_id` +
+        `&order=ball_number.asc`
       );
 
 
-    const normalizedBaseballs =
-      baseballs.map(
-        ball => ({
-          ...ball,
+    const normalized =
+      (baseballs || [])
+        .map(
+          ball => {
 
-          amount_cents:
-            Number(
-              ball.amount_cents
-            ) ||
-            Number(
-              ball.ball_number || 0
-            ) * 100,
-        })
+            const number =
+              Number(
+                ball.ball_number
+              );
+
+
+            const amountCents =
+              Number(
+                ball.amount_cents
+              ) ||
+              number * 100;
+
+
+            return {
+              ...ball,
+
+              ball_number:
+                number,
+
+              amount_cents:
+                amountCents
+            };
+
+          }
+        );
+
+
+    const soldBalls =
+      normalized.filter(
+        ball =>
+          ball.status ===
+          "sold"
       );
 
 
-    // =====================================
-    // BASEBALL TOTAL
-    // =====================================
-
-    const baseballRaisedCents =
-      normalizedBaseballs.reduce(
+    const raisedCents =
+      soldBalls.reduce(
         (
           total,
           ball
-        ) => {
-
-          if (
-            ball.status !==
-            "sold"
-          ) {
-            return total;
-          }
-
-
-          return (
-            total +
-            Number(
-              ball.amount_cents || 0
-            )
-          );
-        },
+        ) =>
+          total +
+          Number(
+            ball.amount_cents ||
+            0
+          ),
         0
       );
 
 
-    const soldCount =
-      normalizedBaseballs.filter(
-        ball =>
-          ball.status ===
-          "sold"
-      ).length;
-
-
-    // =====================================
-    // GENERAL DONATIONS
-    // =====================================
-
-    let generalDonationCents =
-      0;
-
-
-    try {
-
-      const generalDonations =
-        await supabaseGet(
-          env,
-
-          `orders` +
-            `?team_id=eq.${encodeURIComponent(
-              TEAM_KEY
-            )}` +
-            `&player_id=eq.${encodeURIComponent(
-              player.id
-            )}` +
-            `&donation_type=eq.general` +
-            `&status=eq.paid` +
-            `&select=amount_cents`
-        );
-
-
-      generalDonationCents =
-        generalDonations.reduce(
-          (
-            total,
-            order
-          ) =>
-            total +
-            Number(
-              order.amount_cents || 0
-            ),
-          0
-        );
-
-    } catch (
-      generalDonationError
-    ) {
-
-      console.warn(
-        "Unable to load general donations:",
-        generalDonationError
-      );
-
-    }
-
-
-    // =====================================
-    // FUNDRAISING TOTAL
-    // =====================================
-
-    const raisedCents =
-      baseballRaisedCents +
-      generalDonationCents;
-
-
-    const goalCents =
-      183000;
-
-
-    const remainingCents =
-      Math.max(
-        0,
-        goalCents -
-          raisedCents
-      );
+    const raisedDollars =
+      raisedCents /
+      100;
 
 
     const progressPercent =
-      Math.min(
-        100,
-        (
-          raisedCents /
-          goalCents
-        ) * 100
-      );
+      GOAL_DOLLARS
+        ? (
+            raisedDollars /
+            GOAL_DOLLARS
+          ) * 100
+        : 0;
 
-
-    // =====================================
-    // RESPONSE
-    // =====================================
 
     return json({
+
       success: true,
 
       team: {
         id:
           team.id,
 
-        key:
+        teamKey:
           team.team_key,
 
-        name:
-          team.team_name,
+        teamName:
+          team.team_name
       },
 
       player: {
@@ -357,56 +305,62 @@ export async function onRequestGet({
         key:
           player.player_key,
 
+        playerKey:
+          player.player_key,
+
         name:
+          player.player_name,
+
+        playerName:
           player.player_name,
 
         number:
           player.player_number,
+
+        playerNumber:
+          player.player_number
       },
 
       baseballs:
-        normalizedBaseballs,
+        normalized,
 
-      totals: {
-        goalCents,
+      soldBalls:
+        soldBalls,
 
-        goalDollars:
-          goalCents / 100,
+      amountRaised:
+        raisedDollars,
 
-        baseballRaisedCents,
+      goalAmount:
+        GOAL_DOLLARS,
 
-        baseballRaisedDollars:
-          baseballRaisedCents /
-          100,
-
-        generalDonationCents,
-
-        generalDonationDollars:
-          generalDonationCents /
-          100,
-
-        raisedCents,
-
-        raisedDollars:
-          raisedCents / 100,
-
-        remainingCents,
-
-        remainingDollars:
-          remainingCents /
-          100,
-
+      progressPercent:
         progressPercent,
 
-        soldCount,
+      totals: {
+        soldCount:
+          soldBalls.length,
+
+        raisedCents:
+          raisedCents,
+
+        raisedDollars:
+          raisedDollars,
+
+        goalCents:
+          GOAL_DOLLARS *
+          100,
+
+        goalDollars:
+          GOAL_DOLLARS,
 
         remainingCount:
           Math.max(
             0,
             60 -
-              soldCount
-          ),
-      },
+            soldBalls.length
+          )
+      }
+
     });
 
 
@@ -415,7 +369,7 @@ export async function onRequestGet({
   ) {
 
     console.error(
-      "West Boca Panthers fundraiser API error:",
+      "West Boca fundraiser API error:",
       error
     );
 
@@ -427,10 +381,11 @@ export async function onRequestGet({
         error:
           error instanceof Error
             ? error.message
-            : String(error),
+            : String(error)
       },
       500
     );
 
   }
+
 }
