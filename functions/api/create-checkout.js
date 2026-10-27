@@ -1,300 +1,302 @@
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-    },
-  });
-}
+const TEAM_KEY =
+  "west-boca-panthers";
 
-const TEAM_KEY = "west-boca-panthers";
 
-async function supabaseGet(env, path) {
-  const response = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/${path}`,
-    {
-      method: "GET",
-      headers: {
-        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-        authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
-        accept: "application/json",
-      },
-    }
-  );
-
-  const text = await response.text();
-
-  if (!response.ok) {
-    throw new Error(
-      `Supabase ${response.status}: ${text}`
-    );
-  }
-
-  return text ? JSON.parse(text) : [];
-}
-
-async function stripeCreateCheckoutSession(
-  env,
-  params
+function json(
+  data,
+  status = 200
 ) {
-  const body = new URLSearchParams();
 
-  for (const [key, value] of Object.entries(params)) {
-    if (
-      value !== undefined &&
-      value !== null
-    ) {
-      body.append(
-        key,
-        String(value)
-      );
-    }
-  }
-
-  const response = await fetch(
-    "https://api.stripe.com/v1/checkout/sessions",
+  return new Response(
+    JSON.stringify(data),
     {
-      method: "POST",
+      status,
 
       headers: {
-        authorization:
-          `Bearer ${env.STRIPE_SECRET_KEY}`,
-
         "content-type":
-          "application/x-www-form-urlencoded",
-      },
+          "application/json; charset=utf-8",
 
-      body,
+        "cache-control":
+          "no-store"
+      }
     }
   );
+
+}
+
+
+function requireEnvironment(
+  env
+) {
+
+  const missing =
+    [];
+
+
+  if (
+    !env.SUPABASE_URL
+  ) {
+
+    missing.push(
+      "SUPABASE_URL"
+    );
+
+  }
+
+
+  if (
+    !env.SUPABASE_SERVICE_ROLE_KEY
+  ) {
+
+    missing.push(
+      "SUPABASE_SERVICE_ROLE_KEY"
+    );
+
+  }
+
+
+  if (
+    !env.STRIPE_SECRET_KEY
+  ) {
+
+    missing.push(
+      "STRIPE_SECRET_KEY"
+    );
+
+  }
+
+
+  if (
+    missing.length
+  ) {
+
+    throw new Error(
+      `Missing server configuration: ${missing.join(
+        ", "
+      )}`
+    );
+
+  }
+
+}
+
+
+async function supabaseGet(
+  env,
+  path
+) {
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/${path}`,
+      {
+        method:
+          "GET",
+
+        headers: {
+          apikey:
+            env.SUPABASE_SERVICE_ROLE_KEY,
+
+          authorization:
+            `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+
+          accept:
+            "application/json"
+        }
+      }
+    );
+
 
   const text =
     await response.text();
 
-  let data;
 
-  try {
-    data =
-      text
-        ? JSON.parse(text)
-        : {};
-  } catch {
-    data = {};
-  }
+  if (
+    !response.ok
+  ) {
 
-  if (!response.ok) {
     throw new Error(
-      `Stripe ${response.status}: ${
-        data?.error?.message ||
-        text ||
-        "Unable to create checkout."
-      }`
+      `Supabase ${response.status}: ${text}`
     );
+
   }
 
-  return data;
+
+  return text
+    ? JSON.parse(
+        text
+      )
+    : [];
+
 }
+
 
 export async function onRequestPost({
   request,
-  env,
+  env
 }) {
+
   try {
 
-    // =====================================
-    // REQUIRED CONFIGURATION
-    // =====================================
-
-    if (
-      !env.SUPABASE_URL ||
-      !env.SUPABASE_SERVICE_ROLE_KEY ||
-      !env.STRIPE_SECRET_KEY ||
-      !env.SITE_URL
-    ) {
-      return json(
-        {
-          success: false,
-          error:
-            "Missing server configuration.",
-        },
-        500
-      );
-    }
+    requireEnvironment(
+      env
+    );
 
 
-    // =====================================
-    // READ REQUEST
-    // =====================================
-
-    let body;
-
-    try {
-      body =
-        await request.json();
-    } catch {
-      return json(
-        {
-          success: false,
-          error:
-            "Invalid request body.",
-        },
-        400
-      );
-    }
+    const body =
+      await request.json();
 
 
     const playerKey =
       String(
-        body.playerKey ??
-        body.player_key ??
-        body.player ??
+        body.playerKey ||
+        body.player_key ||
+        body.player_slug ||
         ""
       ).trim();
 
 
     const anonymous =
-      body.anonymous === true ||
-      body.anonymous === "true";
+      body.anonymous ===
+      true;
 
 
-    const enteredDonorName =
+    let donorName =
       String(
-        body.donorName ??
-        body.donor_name ??
+        body.donorName ||
+        body.donor_name ||
         ""
-      ).trim();
+      )
+        .trim()
+        .replace(
+          /\s+/g,
+          " "
+        );
 
 
-    const donorName =
+    if (
       anonymous
-        ? "Anonymous"
-        : enteredDonorName;
+    ) {
 
+      donorName =
+        "Anonymous";
 
-    if (!playerKey) {
-      return json(
-        {
-          success: false,
-          error:
-            "A player is required.",
-        },
-        400
-      );
     }
 
 
     if (
       !anonymous &&
-      !donorName
+      donorName.length <
+      2
     ) {
+
       return json(
         {
           success: false,
+
           error:
-            "Enter a donor name or choose Anonymous.",
+            "Please enter a donor name or choose Anonymous."
         },
         400
       );
+
     }
 
 
-    // =====================================
-    // NORMALIZE SELECTED BASEBALLS
-    // =====================================
-
-    const incomingBaseballs =
-      body.baseballs ??
-      body.ballNumbers ??
-      body.ball_numbers ??
-      [];
-
-
-    let baseballNumbers = [];
-
-
-    if (
+    const rawBaseballs =
       Array.isArray(
-        incomingBaseballs
+        body.baseballs
       )
-    ) {
-
-      baseballNumbers =
-        incomingBaseballs;
-
-    } else if (
-      typeof incomingBaseballs ===
-      "string"
-    ) {
-
-      baseballNumbers =
-        incomingBaseballs.split(",");
-
-    }
+        ? body.baseballs
+        : [];
 
 
-    baseballNumbers =
-      [
-        ...new Set(
-          baseballNumbers
-            .map(value =>
-              Number(value)
+    const baseballNumbers =
+      Array.from(
+        new Set(
+          rawBaseballs
+            .map(
+              Number
             )
-            .filter(value =>
-              Number.isInteger(value) &&
-              value >= 1 &&
-              value <= 60
+            .filter(
+              number =>
+                Number.isInteger(
+                  number
+                ) &&
+                number >= 1 &&
+                number <= 60
             )
-        ),
-      ].sort(
-        (a, b) =>
+        )
+      ).sort(
+        (a,b) =>
           a - b
       );
 
 
     if (
-      baseballNumbers.length === 0
+      !playerKey
     ) {
+
       return json(
         {
           success: false,
+
           error:
-            "Choose at least one baseball.",
+            "A player is required."
         },
         400
       );
+
     }
 
 
-    // =====================================
-    // FIND TEAM
-    // =====================================
+    if (
+      !baseballNumbers.length
+    ) {
+
+      return json(
+        {
+          success: false,
+
+          error:
+            "Choose at least one baseball."
+        },
+        400
+      );
+
+    }
+
+
+    /*
+     * Resolve team.
+     */
 
     const teams =
       await supabaseGet(
         env,
 
         `teams` +
-          `?team_key=eq.${encodeURIComponent(
-            TEAM_KEY
-          )}` +
-          `&select=id,team_key,team_name` +
-          `&limit=1`
+        `?team_key=eq.${encodeURIComponent(
+          TEAM_KEY
+        )}` +
+        `&select=id,team_key,team_name` +
+        `&limit=1`
       );
 
 
     if (
-      !Array.isArray(teams) ||
-      teams.length === 0
+      !teams.length
     ) {
+
       return json(
         {
           success: false,
           error:
-            "Team not found.",
+            "West Boca Panthers team not found."
         },
         404
       );
+
     }
 
 
@@ -302,38 +304,39 @@ export async function onRequestPost({
       teams[0];
 
 
-    // =====================================
-    // FIND PLAYER
-    // =====================================
+    /*
+     * Resolve player.
+     */
 
     const players =
       await supabaseGet(
         env,
 
         `players` +
-          `?team_id=eq.${encodeURIComponent(
-            team.id
-          )}` +
-          `&player_key=eq.${encodeURIComponent(
-            playerKey
-          )}` +
-          `&select=id,player_key,player_name,player_number` +
-          `&limit=1`
+        `?team_id=eq.${encodeURIComponent(
+          team.id
+        )}` +
+        `&player_key=eq.${encodeURIComponent(
+          playerKey
+        )}` +
+        `&select=id,team_id,player_key,player_name,player_number` +
+        `&limit=1`
       );
 
 
     if (
-      !Array.isArray(players) ||
-      players.length === 0
+      !players.length
     ) {
+
       return json(
         {
           success: false,
           error:
-            "Player not found.",
+            "Player not found."
         },
         404
       );
+
     }
 
 
@@ -341,240 +344,338 @@ export async function onRequestPost({
       players[0];
 
 
-    // =====================================
-    // CHECK BASEBALL AVAILABILITY
-    // =====================================
-
-    const baseballQuery =
-      baseballNumbers.join(",");
-
+    /*
+     * Confirm balls exist
+     * and remain available.
+     */
 
     const baseballs =
       await supabaseGet(
         env,
 
         `baseballs` +
-          `?team_id=eq.${encodeURIComponent(
-            TEAM_KEY
-          )}` +
-          `&player_id=eq.${encodeURIComponent(
-            player.id
-          )}` +
-          `&ball_number=in.(${baseballQuery})` +
-          `&select=id,ball_number,amount_cents,status` +
-          `&order=ball_number.asc`
-      );
-
-
-    const baseballMap =
-      new Map(
-        baseballs.map(
-          ball => [
-            Number(
-              ball.ball_number
-            ),
-            ball,
-          ]
-        )
-      );
-
-
-    const unavailable =
-      baseballNumbers.filter(
-        ballNumber => {
-
-          const ball =
-            baseballMap.get(
-              ballNumber
-            );
-
-          return (
-            !ball ||
-            ball.status !==
-              "available"
-          );
-
-        }
+        `?player_id=eq.${encodeURIComponent(
+          player.id
+        )}` +
+        `&ball_number=in.(${baseballNumbers.join(
+          ","
+        )})` +
+        `&select=id,ball_number,amount_cents,status`
       );
 
 
     if (
-      unavailable.length > 0
+      baseballs.length !==
+      baseballNumbers.length
     ) {
+
       return json(
         {
           success: false,
 
           error:
-            `These baseballs are no longer available: ${
-              unavailable
-                .map(number =>
-                  `#${number}`
-                )
-                .join(", ")
-            }. Please refresh and choose again.`,
-
-          unavailable,
+            "One or more selected baseballs could not be found."
         },
         409
       );
+
     }
 
 
-    // =====================================
-    // CALCULATE DONATION
-    // =====================================
+    const unavailable =
+      baseballs.filter(
+        ball =>
+          ball.status !==
+          "available"
+      );
+
+
+    if (
+      unavailable.length
+    ) {
+
+      return json(
+        {
+          success: false,
+
+          error:
+            `Baseball${unavailable.length === 1 ? "" : "s"} ` +
+            `${unavailable.map(
+              ball =>
+                `#${ball.ball_number}`
+            ).join(", ")} ` +
+            `${unavailable.length === 1 ? "is" : "are"} no longer available.`
+        },
+        409
+      );
+
+    }
+
+
+    /*
+     * Ball number = donation dollars.
+     */
 
     const amountCents =
       baseballNumbers.reduce(
         (
           total,
-          ballNumber
+          number
         ) =>
           total +
-          ballNumber * 100,
+          number * 100,
         0
       );
 
 
     if (
-      amountCents <= 0
+      amountCents <
+      50
     ) {
+
       return json(
         {
           success: false,
           error:
-            "Invalid donation amount.",
+            "Invalid checkout amount."
         },
         400
       );
+
     }
 
 
-    // =====================================
-    // RETURN URLS
-    // =====================================
-
-    const siteUrl =
-      String(
-        env.SITE_URL
-      ).replace(
-        /\/+$/,
-        ""
-      );
+    const origin =
+      new URL(
+        request.url
+      ).origin;
 
 
     const successUrl =
-      `${siteUrl}/fundraiser.html` +
+      `${origin}/fundraiser.html` +
       `?player=${encodeURIComponent(
-        player.player_key
+        playerKey
       )}` +
       `&payment=success` +
       `&session_id={CHECKOUT_SESSION_ID}`;
 
 
     const cancelUrl =
-      `${siteUrl}/fundraiser.html` +
+      `${origin}/fundraiser.html` +
       `?player=${encodeURIComponent(
-        player.player_key
+        playerKey
       )}` +
       `&payment=cancelled`;
 
 
-    // =====================================
-    // CREATE STRIPE CHECKOUT
-    // =====================================
-
-    const baseballDescription =
-      baseballNumbers
-        .map(number =>
-          `#${number}`
-        )
-        .join(", ");
+    const params =
+      new URLSearchParams();
 
 
-    const session =
-      await stripeCreateCheckoutSession(
-        env,
+    params.set(
+      "mode",
+      "payment"
+    );
+
+
+    params.set(
+      "payment_method_types[0]",
+      "card"
+    );
+
+
+    params.set(
+      "success_url",
+      successUrl
+    );
+
+
+    params.set(
+      "cancel_url",
+      cancelUrl
+    );
+
+
+    params.set(
+      "line_items[0][price_data][currency]",
+      "usd"
+    );
+
+
+    params.set(
+      "line_items[0][price_data][product_data][name]",
+      `West Boca Panthers - ${player.player_name} #${player.player_number}`
+    );
+
+
+    params.set(
+      "line_items[0][price_data][product_data][description]",
+      `Pigeon Forge Baseball${baseballNumbers.length === 1 ? "" : "s"} ` +
+      `${baseballNumbers.map(
+        n =>
+          `#${n}`
+      ).join(", ")}`
+    );
+
+
+    params.set(
+      "line_items[0][price_data][unit_amount]",
+      String(
+        amountCents
+      )
+    );
+
+
+    params.set(
+      "line_items[0][quantity]",
+      "1"
+    );
+
+
+    /*
+     * Stripe metadata used by
+     * webhook + verify-payment.
+     */
+
+    params.set(
+      "metadata[team_key]",
+      TEAM_KEY
+    );
+
+
+    params.set(
+      "metadata[player_id]",
+      String(
+        player.id
+      )
+    );
+
+
+    params.set(
+      "metadata[player_key]",
+      player.player_key
+    );
+
+
+    params.set(
+      "metadata[player_name]",
+      player.player_name
+    );
+
+
+    params.set(
+      "metadata[player_number]",
+      String(
+        player.player_number
+      )
+    );
+
+
+    params.set(
+      "metadata[baseball_numbers]",
+      baseballNumbers.join(
+        ","
+      )
+    );
+
+
+    params.set(
+      "metadata[donor_name]",
+      donorName
+    );
+
+
+    params.set(
+      "metadata[anonymous]",
+      anonymous
+        ? "true"
+        : "false"
+    );
+
+
+    params.set(
+      "metadata[donation_type]",
+      "baseballs"
+    );
+
+
+    params.set(
+      "metadata[amount_cents]",
+      String(
+        amountCents
+      )
+    );
+
+
+    const stripeResponse =
+      await fetch(
+        "https://api.stripe.com/v1/checkout/sessions",
         {
-          mode:
-            "payment",
+          method:
+            "POST",
 
-          "payment_method_types[0]":
-            "card",
+          headers: {
+            authorization:
+              `Bearer ${env.STRIPE_SECRET_KEY}`,
 
-          "line_items[0][price_data][currency]":
-            "usd",
+            "content-type":
+              "application/x-www-form-urlencoded",
 
-          "line_items[0][price_data][product_data][name]":
-            `West Boca Travel Panthers — ${player.player_name} #${player.player_number}`,
+            accept:
+              "application/json"
+          },
 
-          "line_items[0][price_data][product_data][description]":
-            `Baseballs ${baseballDescription}`,
-
-          "line_items[0][price_data][unit_amount]":
-            amountCents,
-
-          "line_items[0][quantity]":
-            1,
-
-          success_url:
-            successUrl,
-
-          cancel_url:
-            cancelUrl,
-
-          "metadata[team_key]":
-            TEAM_KEY,
-
-          "metadata[player_id]":
-            player.id,
-
-          "metadata[player_key]":
-            player.player_key,
-
-          "metadata[player_name]":
-            player.player_name,
-
-          "metadata[player_number]":
-            player.player_number,
-
-          "metadata[donation_type]":
-            "baseballs",
-
-          "metadata[baseballs]":
-            baseballNumbers.join(","),
-
-          "metadata[donor_name]":
-            donorName,
-
-          "metadata[anonymous]":
-            anonymous
-              ? "true"
-              : "false",
-
-          "metadata[amount_cents]":
-            amountCents,
+          body:
+            params.toString()
         }
       );
 
 
-    if (
-      !session?.url
-    ) {
+    const stripeText =
+      await stripeResponse.text();
+
+
+    let session;
+
+
+    try {
+
+      session =
+        JSON.parse(
+          stripeText
+        );
+
+    } catch {
+
       throw new Error(
-        "Stripe did not return a checkout URL."
+        `Stripe returned an invalid response: ${stripeText}`
       );
+
     }
 
 
-    // =====================================
-    // IMPORTANT:
-    // NO BASEBALL IS MARKED SOLD HERE.
-    //
-    // The Stripe webhook will mark the
-    // baseballs sold only after payment.
-    // =====================================
+    if (
+      !stripeResponse.ok
+    ) {
+
+      throw new Error(
+        session?.error?.message ||
+        "Unable to create Stripe checkout session."
+      );
+
+    }
+
+
+    if (
+      !session.url
+    ) {
+
+      throw new Error(
+        "Stripe checkout URL was not returned."
+      );
+
+    }
+
 
     return json({
       success: true,
@@ -583,38 +684,16 @@ export async function onRequestPost({
         session.url,
 
       sessionId:
-        session.id,
-
-      player: {
-        id:
-          player.id,
-
-        key:
-          player.player_key,
-
-        name:
-          player.player_name,
-
-        number:
-          player.player_number,
-      },
-
-      baseballs:
-        baseballNumbers,
-
-      amountCents,
-
-      amountDollars:
-        amountCents / 100,
-
-      donorName,
+        session.id
     });
 
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
-      "West Boca Panthers create checkout error:",
+      "West Boca create checkout error:",
       error
     );
 
@@ -624,15 +703,13 @@ export async function onRequestPost({
         success: false,
 
         error:
-          "Unable to create checkout.",
-
-        details:
           error instanceof Error
             ? error.message
-            : String(error),
+            : String(error)
       },
       500
     );
 
   }
+
 }
