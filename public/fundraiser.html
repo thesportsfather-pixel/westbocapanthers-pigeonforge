@@ -3074,9 +3074,42 @@
     ) {
 
       showNotice(
-        "Thank you! Your donation was completed successfully. The fundraiser will update as soon as Stripe confirms the payment.",
+        "Thank you! Your donation was completed successfully. Updating the fundraiser now...",
         "success"
       );
+
+      const returnedSessionId =
+        params.get("session_id");
+
+      if (returnedSessionId) {
+        (async () => {
+          try {
+            const response = await fetch(
+              `/api/verify-payment?session_id=${encodeURIComponent(returnedSessionId)}`,
+              { cache: "no-store" }
+            );
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+              throw new Error(data.error || "Unable to verify payment.");
+            }
+
+            await loadFundraiser();
+
+            showNotice(
+              "Thank you! Your donation was completed successfully and the fundraiser has been updated.",
+              "success"
+            );
+          } catch (error) {
+            console.error(error);
+            // The Stripe webhook remains the primary updater.
+            // Refresh once more in case it completed during the return trip.
+            setTimeout(() => {
+              loadFundraiser();
+            }, 1500);
+          }
+        })();
+      }
 
     }
 

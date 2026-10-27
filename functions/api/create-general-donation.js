@@ -106,8 +106,7 @@ export async function onRequestPost({
     if (
       !env.SUPABASE_URL ||
       !env.SUPABASE_SERVICE_ROLE_KEY ||
-      !env.STRIPE_SECRET_KEY ||
-      !env.SITE_URL
+      !env.STRIPE_SECRET_KEY
     ) {
       return json(
         {
@@ -312,12 +311,7 @@ export async function onRequestPost({
     // =====================================
 
     const siteUrl =
-      String(
-        env.SITE_URL
-      ).replace(
-        /\/+$/,
-        ""
-      );
+      new URL(request.url).origin;
 
 
     const successUrl =
